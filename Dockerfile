@@ -13,8 +13,9 @@ RUN cd client && npm ci
 # Copy all source
 COPY . .
 
-# Build both (the root build script now handles both: npm run build:client && npm run build:server)
-RUN npm run build
+# Build both
+RUN npm run build:server
+RUN cd client && npm run build
 
 # Production stage
 FROM node:18-alpine

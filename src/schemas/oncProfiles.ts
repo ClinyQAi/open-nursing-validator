@@ -21,7 +21,8 @@ export const ONC_PROFILE_URLS = {
     goalEvaluation: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCGoalEvaluation',
     nursingAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNursingAssessment',
     nhsPatient: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNHSPatient',
-    news2Score: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNEWS2Score'
+    news2Score: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNEWS2Score',
+    woundAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCWoundAssessment'
 } as const;
 
 // =============================================================================
@@ -296,6 +297,48 @@ export const news2ScoreSchema = z.object({
 });
 
 // =============================================================================
+// Wound Assessment Schema (Observation with Components)
+// =============================================================================
+export const woundAssessmentSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['final', 'amended', 'corrected']),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://snomed.info/sct'),
+            code: z.string(), // E.g., '399912005' for Pressure Ulcer
+            display: z.string().optional()
+        }))
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string(),
+    valueCodeableConcept: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://snomed.info/sct'),
+            code: z.enum(['421257003', '421985001', '420555000', '421720008', '421000124102', '103328001']), // Stages 1-4, Unstageable, DTI
+            display: z.string().optional()
+        }))
+    }).optional(),
+    component: z.array(z.object({
+        code: z.object({
+            coding: z.array(z.object({
+                system: z.literal('http://snomed.info/sct'),
+                code: z.string()
+            }))
+        }),
+        valueQuantity: z.object({
+            value: z.number().min(0),
+            unit: z.literal('cm'),
+            system: z.literal('http://unitsofmeasure.org'),
+            code: z.literal('cm')
+        })
+    })).optional()
+});
+
+// =============================================================================
 // Combined ONC Validation Schema
 // =============================================================================
 export const oncValidationPayloadSchema = z.union([
@@ -306,7 +349,8 @@ export const oncValidationPayloadSchema = z.union([
     nursingInterventionSchema,
     goalEvaluationSchema,
     oncNHSPatientSchema,
-    news2ScoreSchema
+    news2ScoreSchema,
+    woundAssessmentSchema
 ]);
 
 // Type exports
@@ -318,3 +362,4 @@ export type NursingIntervention = z.infer<typeof nursingInterventionSchema>;
 export type GoalEvaluation = z.infer<typeof goalEvaluationSchema>;
 export type ONCNHSPatient = z.infer<typeof oncNHSPatientSchema>;
 export type NEWS2Score = z.infer<typeof news2ScoreSchema>;
+export type WoundAssessment = z.infer<typeof woundAssessmentSchema>;

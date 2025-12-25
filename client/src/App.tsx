@@ -36,6 +36,28 @@ const TEMPLATES = {
         name: [{ family: "Gombedza", given: ["Lincoln"] }],
         gender: "male",
         birthDate: "1985-05-20"
+    },
+    WoundAssessment: {
+        resourceType: "Observation",
+        status: "final",
+        code: {
+            coding: [{ system: "http://snomed.info/sct", code: "399912005", display: "Pressure Ulcer" }]
+        },
+        subject: { reference: "Patient/example" },
+        effectiveDateTime: new Date().toISOString(),
+        valueCodeableConcept: {
+            coding: [{ system: "http://snomed.info/sct", code: "420555000", display: "Stage 3" }]
+        },
+        component: [
+            {
+                code: { coding: [{ system: "http://snomed.info/sct", code: "410668003", display: "Length" }] },
+                valueQuantity: { value: 4.5, unit: "cm", system: "http://unitsofmeasure.org", code: "cm" }
+            },
+            {
+                code: { coding: [{ system: "http://snomed.info/sct", code: "410669006", display: "Width" }] },
+                valueQuantity: { value: 3.2, unit: "cm", system: "http://unitsofmeasure.org", code: "cm" }
+            }
+        ]
     }
 };
 

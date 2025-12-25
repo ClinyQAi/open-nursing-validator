@@ -1,10 +1,10 @@
 # Tasks 04: API Documentation
 
-## Todo
-- [ ] Install `swagger-jsdoc` and `swagger-ui-express` (plus types).
-- [ ] Create `src/config/swagger.ts`.
-- [ ] Document `POST /validate-nursing-data` in routes.
-- [ ] Document `GET /health` in app.
-- [ ] Mount Swagger UI in `src/app.ts`.
-- [ ] Build and verify `/api-docs` locally.
-- [ ] Deploy and verify live.
+## Completed
+- [x] Install `swagger-jsdoc` and `swagger-ui-express` (plus types).
+- [x] Create `src/config/swagger.ts`.
+- [x] Document `POST /validate-nursing-data` in routes.
+- [x] Document `GET /health` in app.
+- [x] Mount Swagger UI in `src/app.ts`.
+- [x] Build and verify `/api-docs` locally.
+- [x] Deploy and verify live.

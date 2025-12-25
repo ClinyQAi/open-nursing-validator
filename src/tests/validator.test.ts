@@ -136,6 +136,46 @@ describe('NursingValidator', () => {
         expect(result.isValid).toBe(false);
     });
 
+    // Wound Assessment Tests
+    it('should validate a valid Wound Assessment', () => {
+        const validWound = {
+            resourceType: 'Observation',
+            status: 'final',
+            code: { coding: [{ system: 'http://snomed.info/sct', code: '399912005' }] },
+            subject: { reference: 'Patient/123' },
+            effectiveDateTime: '2023-10-01T10:00:00Z',
+            valueCodeableConcept: {
+                coding: [{ system: 'http://snomed.info/sct', code: '421257003', display: 'Stage 1' }]
+            },
+            component: [
+                {
+                    code: { coding: [{ system: 'http://snomed.info/sct', code: '410668003' }] },
+                    valueQuantity: { value: 5, unit: 'cm', system: 'http://unitsofmeasure.org', code: 'cm' }
+                }
+            ]
+        };
+        const result = validator.validate(validWound);
+        expect(result.isValid).toBe(true);
+    });
+
+    it('should fail Wound Assessment with negative dimension', () => {
+        const invalidWound = {
+            resourceType: 'Observation',
+            status: 'final',
+            code: { coding: [{ system: 'http://snomed.info/sct', code: '399912005' }] },
+            subject: { reference: 'Patient/123' },
+            effectiveDateTime: '2023-10-01T10:00:00Z',
+            component: [
+                {
+                    code: { coding: [{ system: 'http://snomed.info/sct', code: '410668003' }] },
+                    valueQuantity: { value: -5, unit: 'cm', system: 'http://unitsofmeasure.org', code: 'cm' }
+                }
+            ]
+        };
+        const result = validator.validate(invalidWound);
+        expect(result.isValid).toBe(false);
+    });
+
     // General Validation Failure
     it('should fail for unknown resourceType', () => {
         const unknownResource = {

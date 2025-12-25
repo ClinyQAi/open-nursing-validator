@@ -1,10 +1,10 @@
 # Spec 04: Automated API Documentation (OpenAPI)
 
 ## Status
-- [/] Specify
-- [ ] Plan
-- [ ] Tasks
-- [ ] Implement
+- [x] Specify
+- [x] Plan
+- [x] Tasks
+- [x] Implement
 
 ## Overview
 Implement standardized OpenAPI 3.0 documentation for the NHS Unified Nursing Validator. This allows third-party developers and automated systems to explore and integrate with the validator easily.

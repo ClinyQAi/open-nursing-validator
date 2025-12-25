@@ -16,6 +16,6 @@
 - [x] Test local "Unified" build (Server + UI).
 
 ## Phase 4: Polish & Deploy
-- [ ] Add micro-animations (fades, scale-ins).
-- [ ] Update `Dockerfile` for multi-stage frontend build.
-- [ ] Deploy to Azure and verify live.
+- [x] Add micro-animations (fades, scale-ins).
+- [x] Update `Dockerfile` for multi-stage frontend build.
+- [x] Deploy to Azure and verify live.

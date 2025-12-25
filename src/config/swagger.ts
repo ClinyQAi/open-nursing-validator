@@ -1,0 +1,30 @@
+import swaggerJsdoc from 'swagger-jsdoc';
+
+const options: swaggerJsdoc.Options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'NHS Unified Nursing Validator API',
+            version: '1.0.0',
+            description: 'A spec-driven FHIR validation service for the Open Nursing Core Implementation Guide (ONC-IG).',
+            contact: {
+                name: 'Lincoln Gombedza - Nursing Citizen Development',
+                url: 'https://github.com/ClinyQAi/nhs-unified-nursing-validator',
+                email: 'lincolngombedza@gmail.com'
+            },
+        },
+        servers: [
+            {
+                url: 'https://nhs-nursing-validator.bravedesert-5038bd59.westus2.azurecontainerapps.io',
+                description: 'Production Server'
+            },
+            {
+                url: 'http://localhost:3000',
+                description: 'Local Development Server'
+            }
+        ],
+    },
+    apis: ['./src/app.ts', './src/routes/*.ts'], // Path to the API docs
+};
+
+export const swaggerSpec = swaggerJsdoc(options);

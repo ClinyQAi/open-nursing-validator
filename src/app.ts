@@ -2,6 +2,8 @@ import express from 'express';
 import { setValidatorRoutes } from './routes/validatorRoutes';
 import { errorHandler } from './middleware/errorHandler';
 import path from 'path';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
 
 const app = express();
 
@@ -34,7 +36,16 @@ app.get('/', (req, res) => {
 
 app.use(express.static(clientPath));
 
-// Health check endpoint
+/**
+ * @openapi
+ * /health:
+ *   get:
+ *     summary: Health check
+ *     description: Returns the health status of the validator service.
+ *     responses:
+ *       200:
+ *         description: Service is healthy
+ */
 app.get('/health', (req, res) => {
     res.json({
         status: 'healthy',
@@ -42,6 +53,9 @@ app.get('/health', (req, res) => {
         uptime: process.uptime()
     });
 });
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Set up routes
 setValidatorRoutes(app);

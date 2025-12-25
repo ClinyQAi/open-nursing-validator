@@ -1,10 +1,10 @@
 # Spec 03: Visual Validator Dashboard
 
 ## Status
-- [/] Specify
-- [ ] Plan
-- [ ] Tasks
-- [ ] Implement
+- [x] Specify
+- [x] Plan
+- [x] Tasks
+- [x] Implement
 
 ## Overview
 A "Premium" single-page web interface for the NHS Unified Nursing Validator. It allows users to interactively validate FHIR resources without using command-line tools.

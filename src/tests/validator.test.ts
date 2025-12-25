@@ -176,6 +176,46 @@ describe('NursingValidator', () => {
         expect(result.isValid).toBe(false);
     });
 
+    // Pain Assessment Tests
+    it('should validate a valid Pain Assessment (NRS 0-10)', () => {
+        const validPain = {
+            resourceType: 'Observation',
+            status: 'final',
+            code: { coding: [{ system: 'http://loinc.org', code: '72514-3' }] },
+            subject: { reference: 'Patient/123' },
+            effectiveDateTime: '2025-12-25T23:00:00Z',
+            valueInteger: 7
+        };
+        const result = validator.validate(validPain);
+        expect(result.isValid).toBe(true);
+    });
+
+    it('should fail Pain Assessment with score greater than 10', () => {
+        const invalidPain = {
+            resourceType: 'Observation',
+            status: 'final',
+            code: { coding: [{ system: 'http://loinc.org', code: '72514-3' }] },
+            subject: { reference: 'Patient/123' },
+            effectiveDateTime: '2025-12-25T23:00:00Z',
+            valueInteger: 15
+        };
+        const result = validator.validate(invalidPain);
+        expect(result.isValid).toBe(false);
+    });
+
+    it('should fail Pain Assessment with negative score', () => {
+        const invalidPain = {
+            resourceType: 'Observation',
+            status: 'final',
+            code: { coding: [{ system: 'http://loinc.org', code: '72514-3' }] },
+            subject: { reference: 'Patient/123' },
+            effectiveDateTime: '2025-12-25T23:00:00Z',
+            valueInteger: -2
+        };
+        const result = validator.validate(invalidPain);
+        expect(result.isValid).toBe(false);
+    });
+
     // General Validation Failure
     it('should fail for unknown resourceType', () => {
         const unknownResource = {

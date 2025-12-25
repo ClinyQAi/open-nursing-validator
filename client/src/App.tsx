@@ -58,6 +58,27 @@ const TEMPLATES = {
                 valueQuantity: { value: 3.2, unit: "cm", system: "http://unitsofmeasure.org", code: "cm" }
             }
         ]
+    },
+    PainAssessment: {
+        resourceType: "Observation",
+        status: "final",
+        code: {
+            coding: [{
+                system: "http://loinc.org",
+                code: "72514-3",
+                display: "Pain severity - 0-10 verbal numeric rating"
+            }]
+        },
+        subject: { reference: "Patient/example" },
+        effectiveDateTime: new Date().toISOString(),
+        valueInteger: 7,
+        bodySite: {
+            coding: [{
+                system: "http://snomed.info/sct",
+                code: "16982005",
+                display: "Shoulder region structure"
+            }]
+        }
     }
 };
 

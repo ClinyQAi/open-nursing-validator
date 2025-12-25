@@ -44,8 +44,11 @@ export const observationSchema = z.object({
     code: codeableConceptSchema.refine(c => {
         const loincCode = c.coding?.find(f => f.system === 'http://loinc.org')?.code;
         const snomedCode = c.coding?.find(f => f.system === 'http://snomed.info/sct')?.code;
-        return loincCode !== '88330-6' && snomedCode !== '399912005'; // Exclude NEWS2 and Wound Assessment
-    }, { message: "Strict clinical profiles (NEWS2, Wound) must be validated against their specific record schemas" }),
+        return loincCode !== '88330-6' &&
+            snomedCode !== '399912005' &&
+            loincCode !== '72514-3' &&
+            loincCode !== '38208-5'; // Exclude NEWS2, Wound, and Pain Assessment
+    }, { message: "Strict clinical profiles (NEWS2, Wound, Pain) must be validated against their specific record schemas" }),
     subject: referenceSchema.optional(),
     effectiveDateTime: z.string().datetime().optional(),
     valueQuantity: z.object({

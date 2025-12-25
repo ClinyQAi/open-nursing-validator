@@ -22,7 +22,8 @@ export const ONC_PROFILE_URLS = {
     nursingAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNursingAssessment',
     nhsPatient: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNHSPatient',
     news2Score: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNEWS2Score',
-    woundAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCWoundAssessment'
+    woundAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCWoundAssessment',
+    painAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCPainAssessment'
 } as const;
 
 // =============================================================================
@@ -44,6 +45,14 @@ export const BRADEN_SCALE_CODES = {
 export const NEWS2_CODES = {
     totalScore: '88330-6',           // National Early Warning Score [NEWS]
     snomedId: '1104051000000101'     // National Early Warning Score 2 (SNOMED-CT)
+} as const;
+
+// =============================================================================
+// Pain Assessment Codes (Numeric Rating Scale 0-10)
+// =============================================================================
+export const PAIN_ASSESSMENT_CODES = {
+    nrsScore: '72514-3',             // Pain severity - 0-10 verbal numeric rating
+    painSeverity: '38208-5'          // Pain severity - Reported (alternative)
 } as const;
 
 // =============================================================================
@@ -86,7 +95,7 @@ export const bradenScaleObservationSchema = z.object({
     code: z.object({
         coding: z.array(z.object({
             system: z.literal('http://loinc.org'),
-            code: z.string(), // 38222-1 for total score
+            code: z.literal('38222-1'), // Braden Scale Total Score only
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -339,6 +348,30 @@ export const woundAssessmentSchema = z.object({
 });
 
 // =============================================================================
+// Pain Assessment Schema (Numeric Rating Scale 0-10)
+// =============================================================================
+export const painAssessmentSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['final', 'amended', 'corrected']),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.enum(['72514-3', '38208-5']), // NRS or Pain Severity
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().datetime(),
+    valueInteger: z.number().int().min(0).max(10), // NRS range 0-10
+    bodySite: codeableConceptSchema.optional() // Optional pain location
+});
+
+// =============================================================================
 // Combined ONC Validation Schema
 // =============================================================================
 export const oncValidationPayloadSchema = z.union([
@@ -350,7 +383,8 @@ export const oncValidationPayloadSchema = z.union([
     goalEvaluationSchema,
     oncNHSPatientSchema,
     news2ScoreSchema,
-    woundAssessmentSchema
+    woundAssessmentSchema,
+    painAssessmentSchema
 ]);
 
 // Type exports
@@ -363,3 +397,4 @@ export type GoalEvaluation = z.infer<typeof goalEvaluationSchema>;
 export type ONCNHSPatient = z.infer<typeof oncNHSPatientSchema>;
 export type NEWS2Score = z.infer<typeof news2ScoreSchema>;
 export type WoundAssessment = z.infer<typeof woundAssessmentSchema>;
+export type PainAssessment = z.infer<typeof painAssessmentSchema>;

@@ -1,0 +1,100 @@
+name: Clinical Profile Request
+description: Propose a new clinical assessment profile for the validator
+title: "[PROFILE]: "
+labels: ["clinical-profile", "enhancement"]
+assignees:
+  - lincolngombedza
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thank you for contributing to nursing informatics!
+        
+        This template helps clinical experts propose new assessment profiles. We welcome contributions from nurses, healthcare professionals, and informaticists.
+
+  - type: input
+    id: profile-name
+    attributes:
+      label: Clinical Assessment Name
+      description: What is the name of the assessment tool?
+      placeholder: e.g., "Glasgow Coma Scale", "Pain Assessment (NRS)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Clinical Priority
+      description: How critical is this assessment in daily nursing practice?
+      options:
+        - High - Used multiple times per shift
+        - Medium - Used daily/weekly
+        - Low - Used occasionally
+    validations:
+      required: true
+
+  - type: textarea
+    id: clinical-context
+    attributes:
+      label: Clinical Context
+      description: When and why is this assessment used?
+      placeholder: |
+        Example: "The Glasgow Coma Scale is used to assess level of consciousness in patients with head injuries or altered mental status. It's a critical tool in emergency and neurology settings."
+    validations:
+      required: true
+
+  - type: input
+    id: coding-system
+    attributes:
+      label: Standard Coding
+      description: What LOINC, SNOMED, or other standard codes apply?
+      placeholder: "LOINC: 9269-2 (Glasgow coma score total)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: validation-rules
+    attributes:
+      label: Validation Rules
+      description: What are the valid ranges, required fields, and clinical logic?
+      placeholder: |
+        Example:
+        - Eye Response: 1-4
+        - Verbal Response: 1-5
+        - Motor Response: 1-6
+        - Total Score: 3-15 (sum of components)
+        - All three components are required
+    validations:
+      required: true
+
+  - type: input
+    id: clinical-lead
+    attributes:
+      label: Your Name (Clinical Lead)
+      description: We credit all clinical contributors in the spec and code
+      placeholder: "Your Name, RN/Credentials"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information that would help implementation?
+      placeholder: Links to NHS guidelines, NICE recommendations, etc.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Contribution Agreement
+      description: By submitting this profile, you agree to the following
+      options:
+        - label: I understand this will be open source (MIT License)
+          required: true
+        - label: I have clinical expertise in this assessment
+          required: false
+        - label: I'm willing to review the implementation for clinical accuracy
+          required: false

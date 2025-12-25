@@ -1,0 +1,58 @@
+:root {
+    --nhs-blue: #005EB8;
+    --nhs-bright-blue: #0072CE;
+    --nhs-white: #FFFFFF;
+    --nhs-grey-1: #E8EDEE;
+    --nhs-grey-2: #768692;
+    --nhs-black: #212B32;
+    --nhs-success: #007F3B;
+    --nhs-error: #D0021B;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: #f0f4f8;
+    background-image:
+        radial-gradient(at 0% 0%, hsla(210, 100%, 93%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsla(208, 100%, 92%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(212, 100%, 95%, 1) 0, transparent 50%);
+    color: var(--nhs-black);
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-heading);
+}
+
+.premium-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 16px;
+}
+
+button {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}

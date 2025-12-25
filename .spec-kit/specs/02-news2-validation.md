@@ -1,10 +1,10 @@
 # Spec 02: NEWS2 (National Early Warning Score) Validation
 
 ## Status
-- [/] Specify
-- [ ] Plan
-- [ ] Tasks
-- [ ] Implement
+- [x] Specify
+- [x] Plan
+- [x] Tasks
+- [x] Implement
 
 ## Overview
 Add support for validating NEWS2 (National Early Warning Score) observations. NEWS2 is the standard for identifying acutely ill patients in the NHS.

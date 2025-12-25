@@ -1,32 +1,32 @@
 # Build stage
 FROM node:18-alpine AS builder
-
 WORKDIR /app
 
-# Copy package files
+# Install root dependencies
 COPY package*.json ./
-
-# Install all dependencies (including dev for TypeScript compilation)
 RUN npm ci
 
-# Copy source code
+# Install client dependencies
+COPY client/package*.json ./client/
+RUN cd client && npm ci
+
+# Copy all source
 COPY . .
 
-# Build TypeScript
-RUN npm run build 2>/dev/null || npx tsc --outDir dist
+# Build both (the root build script now handles both: npm run build:client && npm run build:server)
+RUN npm run build
 
 # Production stage
 FROM node:18-alpine
-
 WORKDIR /app
 
-# Copy package files
+# Copy root package files
 COPY package*.json ./
 
 # Install production dependencies only
 RUN npm ci --only=production
 
-# Copy built files from builder
+# Copy built files from builder (includes both dist/ and dist/client/)
 COPY --from=builder /app/dist ./dist
 
 # Expose port

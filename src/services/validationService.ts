@@ -1,6 +1,13 @@
+import { NursingValidator } from '../validators/nursingValidator';
+
 export class ValidationService {
-    performValidation(data: any): boolean {
-        // Implement validation logic here
-        return true; // Placeholder return value
+    private validator: NursingValidator;
+
+    constructor() {
+        this.validator = new NursingValidator();
+    }
+
+    performValidation(data: any): { isValid: boolean; errors?: any } {
+        return this.validator.validate(data);
     }
 }

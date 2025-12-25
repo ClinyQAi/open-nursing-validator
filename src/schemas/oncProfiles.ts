@@ -1,0 +1,285 @@
+/**
+ * Open Nursing Core (ONC) Implementation Guide - Zod Validation Schemas
+ * 
+ * These schemas validate FHIR resources against the ONC-IG profiles:
+ * https://clinyqai.github.io/open-nursing-core-ig/
+ * 
+ * Author: Lincoln Gombedza - Nursing Citizen Development
+ */
+
+import { z } from 'zod';
+
+// =============================================================================
+// ONC-IG Profile URLs
+// =============================================================================
+export const ONC_PROFILE_URLS = {
+    bradenScaleAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCBradenScaleAssessment',
+    skinToneObservation: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCSkinToneObservation',
+    nursingProblem: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNursingProblem',
+    patientGoal: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCPatientGoal',
+    nursingIntervention: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNursingIntervention',
+    goalEvaluation: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCGoalEvaluation',
+    nursingAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNursingAssessment',
+    nhsPatient: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNHSPatient'
+} as const;
+
+// =============================================================================
+// LOINC Codes for Braden Scale
+// =============================================================================
+export const BRADEN_SCALE_CODES = {
+    totalScore: '38222-1',           // Braden scale total score
+    sensoryPerception: '38229-6',    // Sensory perception
+    moisture: '38230-4',             // Moisture exposure
+    activity: '38231-2',             // Physical activity
+    mobility: '38232-0',             // Mobility
+    nutrition: '38233-8',            // Nutrition
+    frictionShear: '38234-6'         // Friction and shear
+} as const;
+
+// =============================================================================
+// Shared Schema Components
+// =============================================================================
+const codingSchema = z.object({
+    system: z.string().url().optional(),
+    code: z.string(),
+    display: z.string().optional()
+});
+
+const codeableConceptSchema = z.object({
+    coding: z.array(codingSchema).min(1),
+    text: z.string().optional()
+});
+
+const referenceSchema = z.object({
+    reference: z.string(),
+    display: z.string().optional()
+});
+
+const quantitySchema = z.object({
+    value: z.number(),
+    unit: z.string().optional(),
+    system: z.string().optional(),
+    code: z.string().optional()
+});
+
+// =============================================================================
+// Braden Scale Assessment Schema
+// =============================================================================
+export const bradenScaleObservationSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['registered', 'preliminary', 'final', 'amended', 'corrected', 'cancelled', 'entered-in-error', 'unknown']),
+    category: z.array(codeableConceptSchema).optional(),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.string(), // 38222-1 for total score
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().optional(),
+    valueInteger: z.number().int().min(6).max(23).optional(), // Braden scores range 6-23
+    component: z.array(z.object({
+        code: codeableConceptSchema,
+        valueInteger: z.number().int().min(1).max(4).optional() // Subscale scores 1-4
+    })).optional()
+});
+
+// =============================================================================
+// Skin Tone Observation Schema (Fitzpatrick/Monk Scale)
+// =============================================================================
+export const skinToneObservationSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['registered', 'preliminary', 'final', 'amended', 'corrected', 'cancelled', 'entered-in-error', 'unknown']),
+    category: z.array(codeableConceptSchema).optional(),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.literal('66472-2'), // Fitzpatrick skin type LOINC
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().optional(),
+    valueCodeableConcept: z.object({
+        coding: z.array(z.object({
+            system: z.string(),
+            code: z.string(), // Fitzpatrick type I-VI or Monk scale
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }).optional()
+});
+
+// =============================================================================
+// Nursing Problem Schema (Condition)
+// =============================================================================
+export const nursingProblemSchema = z.object({
+    resourceType: z.literal('Condition'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    clinicalStatus: codeableConceptSchema.optional(),
+    verificationStatus: codeableConceptSchema.optional(),
+    category: z.array(z.object({
+        coding: z.array(z.object({
+            system: z.string(),
+            code: z.string(),
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    })).optional(),
+    severity: codeableConceptSchema.optional(),
+    code: codeableConceptSchema, // SNOMED CT nursing diagnosis
+    subject: referenceSchema,
+    onsetDateTime: z.string().optional(),
+    recordedDate: z.string().optional(),
+    asserter: referenceSchema.optional(),
+    note: z.array(z.object({
+        text: z.string()
+    })).optional()
+});
+
+// =============================================================================
+// Patient Goal Schema
+// =============================================================================
+export const patientGoalSchema = z.object({
+    resourceType: z.literal('Goal'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    lifecycleStatus: z.enum(['proposed', 'planned', 'accepted', 'active', 'on-hold', 'completed', 'cancelled', 'entered-in-error', 'rejected']),
+    achievementStatus: codeableConceptSchema.optional(),
+    category: z.array(codeableConceptSchema).optional(),
+    priority: codeableConceptSchema.optional(),
+    description: codeableConceptSchema,
+    subject: referenceSchema,
+    startDate: z.string().optional(),
+    target: z.array(z.object({
+        measure: codeableConceptSchema.optional(),
+        detailString: z.string().optional(),
+        detailQuantity: quantitySchema.optional(),
+        dueDate: z.string().optional()
+    })).optional(),
+    expressedBy: referenceSchema.optional(),
+    addresses: z.array(referenceSchema).optional(), // Links to Conditions
+    note: z.array(z.object({
+        text: z.string()
+    })).optional()
+});
+
+// =============================================================================
+// Nursing Intervention Schema (Procedure)
+// =============================================================================
+export const nursingInterventionSchema = z.object({
+    resourceType: z.literal('Procedure'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['preparation', 'in-progress', 'not-done', 'on-hold', 'stopped', 'completed', 'entered-in-error', 'unknown']),
+    category: codeableConceptSchema.optional(),
+    code: codeableConceptSchema, // SNOMED CT intervention code
+    subject: referenceSchema,
+    performedDateTime: z.string().optional(),
+    performedPeriod: z.object({
+        start: z.string().optional(),
+        end: z.string().optional()
+    }).optional(),
+    performer: z.array(z.object({
+        actor: referenceSchema
+    })).optional(),
+    reasonReference: z.array(referenceSchema).optional(), // Links to Conditions
+    note: z.array(z.object({
+        text: z.string()
+    })).optional()
+});
+
+// =============================================================================
+// Goal Evaluation Schema (Observation)
+// =============================================================================
+export const goalEvaluationSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['registered', 'preliminary', 'final', 'amended', 'corrected', 'cancelled', 'entered-in-error', 'unknown']),
+    category: z.array(codeableConceptSchema).optional(),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://snomed.info/sct'),
+            code: z.literal('385633008'), // Finding related to progress toward goals
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    focus: z.array(referenceSchema).optional(), // Reference to Goal
+    effectiveDateTime: z.string().optional(),
+    valueCodeableConcept: codeableConceptSchema.optional(), // Goal achieved, improving, etc.
+    note: z.array(z.object({
+        text: z.string()
+    })).optional()
+});
+
+// =============================================================================
+// ONC NHS Patient Schema (with ethnic category extension)
+// =============================================================================
+export const oncNHSPatientSchema = z.object({
+    resourceType: z.literal('Patient'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    extension: z.array(z.object({
+        url: z.string(),
+        valueCodeableConcept: codeableConceptSchema.optional()
+    })).optional(),
+    identifier: z.array(z.object({
+        system: z.string().optional(),
+        value: z.string()
+    })).optional(),
+    name: z.array(z.object({
+        use: z.string().optional(),
+        family: z.string().optional(),
+        given: z.array(z.string()).optional(),
+        text: z.string().optional()
+    })).optional(),
+    gender: z.enum(['male', 'female', 'other', 'unknown']).optional(),
+    birthDate: z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/).optional()
+});
+
+// =============================================================================
+// Combined ONC Validation Schema
+// =============================================================================
+export const oncValidationPayloadSchema = z.union([
+    bradenScaleObservationSchema,
+    skinToneObservationSchema,
+    nursingProblemSchema,
+    patientGoalSchema,
+    nursingInterventionSchema,
+    goalEvaluationSchema,
+    oncNHSPatientSchema
+]);
+
+// Type exports
+export type BradenScaleObservation = z.infer<typeof bradenScaleObservationSchema>;
+export type SkinToneObservation = z.infer<typeof skinToneObservationSchema>;
+export type NursingProblem = z.infer<typeof nursingProblemSchema>;
+export type PatientGoal = z.infer<typeof patientGoalSchema>;
+export type NursingIntervention = z.infer<typeof nursingInterventionSchema>;
+export type GoalEvaluation = z.infer<typeof goalEvaluationSchema>;
+export type ONCNHSPatient = z.infer<typeof oncNHSPatientSchema>;

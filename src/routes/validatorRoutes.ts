@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { ValidatorController } from '../controllers/validatorController';
+import ValidatorController from '../controllers/validatorController';
 
 const router = Router();
 const validatorController = new ValidatorController();

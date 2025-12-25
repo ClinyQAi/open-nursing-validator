@@ -1,6 +1,16 @@
+import { validationPayloadSchema } from '../schemas/fhirSchemas';
+
 export class NursingValidator {
-    validate(data: any): boolean {
-        // Implement specific validation rules for nursing data here
-        return true; // Placeholder return value
+    validate(data: any): { isValid: boolean; errors?: any } {
+        const result = validationPayloadSchema.safeParse(data);
+
+        if (result.success) {
+            return { isValid: true };
+        } else {
+            return {
+                isValid: false,
+                errors: result.error.format()
+            };
+        }
     }
 }

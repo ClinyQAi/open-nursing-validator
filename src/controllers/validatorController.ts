@@ -1,13 +1,30 @@
+import { Request, Response } from 'express';
+import { ValidationService } from '../services/validationService';
+
 class ValidatorController {
-    validateNursingData(req, res) {
-        // Logic to validate nursing data
+    private validationService: ValidationService;
+
+    constructor() {
+        this.validationService = new ValidationService();
+    }
+
+    validateNursingData = (req: Request, res: Response): void => {
         const nursingData = req.body;
 
-        // Call the validation service to perform validation
-        // const validationResult = validationService.performValidation(nursingData);
+        const result = this.validationService.performValidation(nursingData);
 
-        // Respond with the validation result
-        // res.json(validationResult);
+        if (result.isValid) {
+            res.status(200).json({
+                message: 'Nursing data is valid',
+                status: 'success'
+            });
+        } else {
+            res.status(400).json({
+                message: 'Validation failed',
+                status: 'error',
+                errors: result.errors
+            });
+        }
     }
 }
 

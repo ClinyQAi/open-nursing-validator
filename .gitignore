@@ -19,3 +19,10 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
+
+# Test Coverage
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db

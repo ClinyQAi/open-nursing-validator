@@ -11,14 +11,12 @@ app.use(express.json());
 // Root endpoint - API information
 // Serve static files from the React app
 const clientPath = path.join(__dirname, 'client');
-app.use(express.static(clientPath));
 
 // Root endpoint - Serves React app or API information
 app.get('/', (req, res) => {
-    // Check if index.html exists in the client path
     res.sendFile(path.join(clientPath, 'index.html'), (err) => {
         if (err) {
-            // If frontend is not built, fallback to API info JSON
+            // Fallback to API info if dashboard is not built
             res.json({
                 name: 'NHS Unified Nursing Validator',
                 version: '1.0.0',
@@ -28,12 +26,13 @@ app.get('/', (req, res) => {
                     health: 'GET /health'
                 },
                 documentation: 'https://clinyqai.github.io/open-nursing-core-ig/',
-                author: 'Lincoln Gombedza - Nursing Citizen Development',
-                note: 'Visual dashboard not found. Run npm run build to enable.'
+                author: 'Lincoln Gombedza - Nursing Citizen Development'
             });
         }
     });
 });
+
+app.use(express.static(clientPath));
 
 // Health check endpoint
 app.get('/health', (req, res) => {

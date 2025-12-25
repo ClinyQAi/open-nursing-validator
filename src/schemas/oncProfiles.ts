@@ -20,7 +20,8 @@ export const ONC_PROFILE_URLS = {
     nursingIntervention: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNursingIntervention',
     goalEvaluation: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCGoalEvaluation',
     nursingAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNursingAssessment',
-    nhsPatient: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNHSPatient'
+    nhsPatient: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNHSPatient',
+    news2Score: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNEWS2Score'
 } as const;
 
 // =============================================================================
@@ -34,6 +35,14 @@ export const BRADEN_SCALE_CODES = {
     mobility: '38232-0',             // Mobility
     nutrition: '38233-8',            // Nutrition
     frictionShear: '38234-6'         // Friction and shear
+} as const;
+
+// =============================================================================
+// NEWS2 Codes
+// =============================================================================
+export const NEWS2_CODES = {
+    totalScore: '88330-6',           // National Early Warning Score [NEWS]
+    snomedId: '1104051000000101'     // National Early Warning Score 2 (SNOMED-CT)
 } as const;
 
 // =============================================================================
@@ -263,6 +272,30 @@ export const oncNHSPatientSchema = z.object({
 });
 
 // =============================================================================
+// NEWS2 Score Schema (Observation)
+// =============================================================================
+export const news2ScoreSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['registered', 'preliminary', 'final', 'amended', 'corrected', 'cancelled', 'entered-in-error', 'unknown']),
+    category: z.array(codeableConceptSchema).optional(),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.literal('88330-6'), // NEWS2 Total Score LOINC
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().optional(),
+    valueInteger: z.number().int().min(0).max(20) // NEWS2 scores range 0-20
+});
+
+// =============================================================================
 // Combined ONC Validation Schema
 // =============================================================================
 export const oncValidationPayloadSchema = z.union([
@@ -272,7 +305,8 @@ export const oncValidationPayloadSchema = z.union([
     patientGoalSchema,
     nursingInterventionSchema,
     goalEvaluationSchema,
-    oncNHSPatientSchema
+    oncNHSPatientSchema,
+    news2ScoreSchema
 ]);
 
 // Type exports
@@ -283,3 +317,4 @@ export type PatientGoal = z.infer<typeof patientGoalSchema>;
 export type NursingIntervention = z.infer<typeof nursingInterventionSchema>;
 export type GoalEvaluation = z.infer<typeof goalEvaluationSchema>;
 export type ONCNHSPatient = z.infer<typeof oncNHSPatientSchema>;
+export type NEWS2Score = z.infer<typeof news2ScoreSchema>;

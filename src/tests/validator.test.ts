@@ -101,6 +101,41 @@ describe('NursingValidator', () => {
         expect(result.isValid).toBe(true);
     });
 
+    // NEWS2 Tests
+    it('should validate a valid NEWS2 Score (Observation)', () => {
+        const validNews2 = {
+            resourceType: 'Observation',
+            status: 'final',
+            code: {
+                coding: [{
+                    system: 'http://loinc.org',
+                    code: '88330-6'
+                }]
+            },
+            subject: { reference: 'Patient/123' },
+            valueInteger: 12 // Score in range 0-20
+        };
+        const result = validator.validate(validNews2);
+        expect(result.isValid).toBe(true);
+    });
+
+    it('should fail NEWS2 with value out of range', () => {
+        const invalidNews2 = {
+            resourceType: 'Observation',
+            status: 'final',
+            code: {
+                coding: [{
+                    system: 'http://loinc.org',
+                    code: '88330-6'
+                }]
+            },
+            subject: { reference: 'Patient/123' },
+            valueInteger: 25 // Invalid: > 20
+        };
+        const result = validator.validate(invalidNews2);
+        expect(result.isValid).toBe(false);
+    });
+
     // General Validation Failure
     it('should fail for unknown resourceType', () => {
         const unknownResource = {

@@ -1,0 +1,23 @@
+﻿-------------------------|---------|----------|---------|---------|-------------------
+File                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------------|---------|----------|---------|---------|-------------------
+All files                |   46.05 |    14.28 |      10 |   46.66 |                   
+ src                     |       0 |        0 |       0 |       0 |                   
+  app.ts                 |       0 |      100 |       0 |       0 | 1-40              
+  server.ts              |       0 |        0 |       0 |       0 | 1-7               
+ src/config              |       0 |        0 |     100 |       0 |                   
+  index.ts               |       0 |        0 |     100 |       0 | 1                 
+ src/controllers         |       0 |        0 |       0 |       0 |                   
+  validatorController.ts |       0 |        0 |       0 |       0 | 2-31              
+ src/middleware          |       0 |      100 |       0 |       0 |                   
+  errorHandler.ts        |       0 |      100 |       0 |       0 | 3-5               
+ src/routes              |       0 |      100 |       0 |       0 |                   
+  validatorRoutes.ts     |       0 |      100 |       0 |       0 | 1-8               
+ src/schemas             |     100 |      100 |     100 |     100 |                   
+  fhirSchemas.ts         |     100 |      100 |     100 |     100 |                   
+  oncProfiles.ts         |     100 |      100 |     100 |     100 |                   
+ src/services            |       0 |      100 |       0 |       0 |                   
+  validationService.ts   |       0 |      100 |       0 |       0 | 1-11              
+ src/validators          |     100 |      100 |     100 |     100 |                   
+  nursingValidator.ts    |     100 |      100 |     100 |     100 |                   
+-------------------------|---------|----------|---------|---------|-------------------

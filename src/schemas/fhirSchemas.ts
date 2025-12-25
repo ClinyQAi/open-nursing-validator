@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { oncValidationPayloadSchema } from './oncProfiles';
 
 // Re-export ONC-IG specific schemas
 export * from './oncProfiles';
@@ -40,7 +41,10 @@ export const observationSchema = z.object({
     resourceType: z.literal('Observation'),
     status: z.enum(['registered', 'preliminary', 'final', 'amended', 'corrected', 'cancelled', 'entered-in-error', 'unknown']),
     category: z.array(codeableConceptSchema).optional(),
-    code: codeableConceptSchema,
+    code: codeableConceptSchema.refine(c => {
+        const loincCode = c.coding?.find(f => f.system === 'http://loinc.org')?.code;
+        return loincCode !== '88330-6'; // Exclude NEWS2 from generic observation
+    }, { message: "NEWS2 scores must be validated against the strict record schema" }),
     subject: referenceSchema.optional(),
     effectiveDateTime: z.string().datetime().optional(),
     valueQuantity: z.object({
@@ -122,7 +126,8 @@ export const procedureSchema = z.object({
 });
 
 // Union schema for valid validation payloads
-export const validationPayloadSchema = z.discriminatedUnion('resourceType', [
+export const validationPayloadSchema = z.union([
+    oncValidationPayloadSchema,
     patientSchema,
     observationSchema,
     conditionSchema,

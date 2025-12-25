@@ -4,7 +4,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { config } from './config';
 
 const app = express();
-const PORT = config.PORT || 3000;
+const PORT = config.port || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

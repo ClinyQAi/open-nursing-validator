@@ -1,5 +1,5 @@
 {
-  "name": "nhs-unified-nursing-validator",
+  "name": "open-nursing-validator",
   "version": "1.0.0",
   "description": "FHIR R4 validation API for the Open Nursing Core Implementation Guide (ONC-IG)",
   "main": "dist/server.js",
@@ -35,7 +35,6 @@
     "typescript": "^4.4.4"
   },
   "keywords": [
-    "NHS",
     "nursing",
     "fhir",
     "validation",

@@ -149,7 +149,7 @@ PainAssessment: {
 - Ensure existing tests still pass (no regressions)
 
 ### Manual Verification (Dashboard)
-1. Navigate to the live dashboard: `https://nhs-nursing-validator.bravedesert-5038bd59.westus2.azurecontainerapps.io/`
+1. Navigate to the live dashboard: `https://open-nursing-validator.bravedesert-5038bd59.westus2.azurecontainerapps.io/`
 2. Click the "PainAssessment" template button
 3. Click "Validate Payload" - should show "Resource Valid"
 4. Change `valueInteger` to `15` and validate - should fail with clear error

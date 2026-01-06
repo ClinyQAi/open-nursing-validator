@@ -2,9 +2,9 @@
 
 ## Status
 - [x] Specify
-- [ ] Plan
-- [ ] Tasks
-- [ ] Implement
+- [x] Plan
+- [x] Tasks
+- [x] Implement
 
 ## Clinical Context
 Pain assessment is one of the most frequently performed nursing assessments. The Numeric Rating Scale (NRS) is the gold standard for pain assessment in adults, asking patients to rate their pain from 0 (no pain) to 10 (worst pain imaginable).

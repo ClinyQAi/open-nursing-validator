@@ -4,7 +4,7 @@ const options: swaggerJsdoc.Options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'NHS Unified Nursing Validator API',
+            title: 'Open Nursing Validator API',
             version: '1.0.0',
             description: 'A spec-driven FHIR validation service for the Open Nursing Core Implementation Guide (ONC-IG).',
             contact: {

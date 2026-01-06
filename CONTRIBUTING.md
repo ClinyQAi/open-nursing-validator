@@ -1,6 +1,6 @@
-# Contributing to NHS Unified Nursing Validator
+# Contributing to Open Nursing Validator
 
-Thank you for your interest in contributing to the NHS Unified Nursing Validator! This project validates FHIR resources against the Open Nursing Core Implementation Guide (ONC-IG).
+Thank you for your interest in contributing to the Open Nursing Validator! This project validates FHIR resources against the Open Nursing Core Implementation Guide (ONC-IG).
 
 ## 🎯 Ways to Contribute
 

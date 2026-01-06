@@ -9,5 +9,5 @@
 - [x] Add 3 unit tests for Pain Assessment validation
 - [x] Add "PainAssessment" template to Dashboard
 - [x] Run tests locally (`npm test`) - All 16 tests pass
-- [ ] Build and deploy to Azure
-- [ ] Verify live via Dashboard and Swagger UI
+- [x] Build and deploy to Azure
+- [x] Verify live via Dashboard and Swagger UI

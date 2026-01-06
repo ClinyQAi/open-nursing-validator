@@ -118,7 +118,7 @@ function App() {
                         <div style={{ background: '#005EB8', padding: '8px', borderRadius: '10px' }}>
                             <ShieldCheck color="white" size={28} />
                         </div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: 700, color: '#005EB8' }}>NHS Unified Nursing Validator</h1>
+                        <h1 style={{ fontSize: '2rem', fontWeight: 700, color: '#005EB8' }}>Open Nursing Validator</h1>
                     </div>
                     <p style={{ color: '#768692', fontSize: '1.1rem' }}>Spec-driven FHIR validation for clinical documentation.</p>
                 </div>

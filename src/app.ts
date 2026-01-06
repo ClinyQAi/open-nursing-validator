@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
         if (err) {
             // Fallback to API info if dashboard is not built
             res.json({
-                name: 'NHS Unified Nursing Validator',
+                name: 'Open Nursing Validator',
                 version: '1.0.0',
                 description: 'FHIR R4 validation API for the Open Nursing Core Implementation Guide (ONC-IG)',
                 endpoints: {

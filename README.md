@@ -1,4 +1,4 @@
-# NHS Unified Nursing Validator
+# Open Nursing Validator
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![FHIR R4](https://img.shields.io/badge/FHIR-R4-blue.svg)](https://hl7.org/fhir/R4/)
@@ -9,7 +9,7 @@
 
 ## Overview
 
-The **NHS Unified Nursing Validator** is a TypeScript/Node.js REST API service that validates FHIR resources against the [Open Nursing Core Implementation Guide (ONC-IG)](https://clinyqai.github.io/open-nursing-core-ig/).
+The **Open Nursing Validator** is a TypeScript/Node.js REST API service that validates FHIR resources against the [Open Nursing Core Implementation Guide (ONC-IG)](https://clinyqai.github.io/open-nursing-core-ig/).
 
 **Author:** Lincoln Gombedza - [Nursing Citizen Development](https://github.com/ClinyQAi)
 

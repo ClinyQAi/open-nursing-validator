@@ -79,6 +79,36 @@ const TEMPLATES = {
                 display: "Shoulder region structure"
             }]
         }
+    },
+    MUSTScore: {
+        resourceType: "Observation",
+        status: "final",
+        code: {
+            coding: [{ system: "http://loinc.org", code: "75303-8", display: "MUST Total Score" }]
+        },
+        subject: { reference: "Patient/example" },
+        effectiveDateTime: new Date().toISOString(),
+        valueInteger: 2
+    },
+    AbbeyPainScale: {
+        resourceType: "Observation",
+        status: "final",
+        code: {
+            coding: [{ system: "http://loinc.org", code: "38213-0", display: "Abbey Pain Scale Total Score" }]
+        },
+        subject: { reference: "Patient/example" },
+        effectiveDateTime: new Date().toISOString(),
+        valueInteger: 5
+    },
+    BristolStoolChart: {
+        resourceType: "Observation",
+        status: "final",
+        code: {
+            coding: [{ system: "http://loinc.org", code: "72106-8", display: "Bristol Stool Form Panel" }]
+        },
+        subject: { reference: "Patient/example" },
+        effectiveDateTime: new Date().toISOString(),
+        valueInteger: 4
     }
 };
 

@@ -47,8 +47,11 @@ export const observationSchema = z.object({
         return loincCode !== '88330-6' &&
             snomedCode !== '399912005' &&
             loincCode !== '72514-3' &&
-            loincCode !== '38208-5'; // Exclude NEWS2, Wound, and Pain Assessment
-    }, { message: "Strict clinical profiles (NEWS2, Wound, Pain) must be validated against their specific record schemas" }),
+            loincCode !== '38208-5' &&
+            loincCode !== '75303-8' &&
+            loincCode !== '38213-0' &&
+            loincCode !== '72106-8'; // Exclude clinical profiles
+    }, { message: "Strict clinical profiles (NEWS2, Wound, Pain, MUST, Abbey, Bristol) must be validated against their specific record schemas" }),
     subject: referenceSchema.optional(),
     effectiveDateTime: z.string().datetime().optional(),
     valueQuantity: z.object({

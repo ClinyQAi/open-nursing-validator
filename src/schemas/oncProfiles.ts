@@ -23,7 +23,10 @@ export const ONC_PROFILE_URLS = {
     nhsPatient: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNHSPatient',
     news2Score: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCNEWS2Score',
     woundAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCWoundAssessment',
-    painAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCPainAssessment'
+    painAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCPainAssessment',
+    mustScore: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCMUSTScore',
+    abbeyPainScale: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCAbbeyPainScale',
+    bristolStoolChart: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCBristolStoolChart'
 } as const;
 
 // =============================================================================
@@ -53,6 +56,27 @@ export const NEWS2_CODES = {
 export const PAIN_ASSESSMENT_CODES = {
     nrsScore: '72514-3',             // Pain severity - 0-10 verbal numeric rating
     painSeverity: '38208-5'          // Pain severity - Reported (alternative)
+} as const;
+
+// =============================================================================
+// MUST Score Codes
+// =============================================================================
+export const MUST_SCORE_CODES = {
+    totalScore: '75303-8'            // Malnutrition Universal Screening Tool [MUST]
+} as const;
+
+// =============================================================================
+// Abbey Pain Scale Codes
+// =============================================================================
+export const ABBEY_PAIN_CODES = {
+    totalScore: '38213-0'            // Abbey pain scale total score
+} as const;
+
+// =============================================================================
+// Bristol Stool Chart Codes
+// =============================================================================
+export const BRISTOL_STOOL_CODES = {
+    stoolType: '72106-8'             // Bristol stool form panel
 } as const;
 
 // =============================================================================
@@ -372,6 +396,75 @@ export const painAssessmentSchema = z.object({
 });
 
 // =============================================================================
+// MUST Score Schema (Observation)
+// =============================================================================
+export const mustScoreSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['final', 'amended', 'corrected']),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.literal(MUST_SCORE_CODES.totalScore),
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().datetime(),
+    valueInteger: z.number().int().min(0).max(6) // MUST range 0-6
+});
+
+// =============================================================================
+// Abbey Pain Scale Schema (Observation)
+// =============================================================================
+export const abbeyPainScaleSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['final', 'amended', 'corrected']),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.literal(ABBEY_PAIN_CODES.totalScore),
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().datetime(),
+    valueInteger: z.number().int().min(0).max(18) // Abbey range 0-18
+});
+
+// =============================================================================
+// Bristol Stool Chart Schema (Observation)
+// =============================================================================
+export const bristolStoolChartSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['final', 'amended', 'corrected']),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.literal(BRISTOL_STOOL_CODES.stoolType),
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().datetime(),
+    valueInteger: z.number().int().min(1).max(7) // Bristol types 1-7
+});
+
+// =============================================================================
 // Combined ONC Validation Schema
 // =============================================================================
 export const oncValidationPayloadSchema = z.union([
@@ -384,7 +477,10 @@ export const oncValidationPayloadSchema = z.union([
     oncNHSPatientSchema,
     news2ScoreSchema,
     woundAssessmentSchema,
-    painAssessmentSchema
+    painAssessmentSchema,
+    mustScoreSchema,
+    abbeyPainScaleSchema,
+    bristolStoolChartSchema
 ]);
 
 // Type exports
@@ -398,3 +494,6 @@ export type ONCNHSPatient = z.infer<typeof oncNHSPatientSchema>;
 export type NEWS2Score = z.infer<typeof news2ScoreSchema>;
 export type WoundAssessment = z.infer<typeof woundAssessmentSchema>;
 export type PainAssessment = z.infer<typeof painAssessmentSchema>;
+export type MUSTScore = z.infer<typeof mustScoreSchema>;
+export type AbbeyPainScale = z.infer<typeof abbeyPainScaleSchema>;
+export type BristolStoolChart = z.infer<typeof bristolStoolChartSchema>;

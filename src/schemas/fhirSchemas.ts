@@ -50,8 +50,11 @@ export const observationSchema = z.object({
             loincCode !== '38208-5' &&
             loincCode !== '75303-8' &&
             loincCode !== '38213-0' &&
-            loincCode !== '72106-8'; // Exclude clinical profiles
-    }, { message: "Strict clinical profiles (NEWS2, Wound, Pain, MUST, Abbey, Bristol) must be validated against their specific record schemas" }),
+            loincCode !== '72106-8' &&
+            loincCode !== '9269-2' &&
+            loincCode !== '91535-5' &&
+            loincCode !== 'ONC-ROAG-Score'; // Exclude clinical profiles
+    }, { message: "Strict clinical profiles (NEWS2, Wound, Pain, MUST, Abbey, Bristol, GCS, Frailty, ROAG) must be validated against their specific record schemas" }),
     subject: referenceSchema.optional(),
     effectiveDateTime: z.string().datetime().optional(),
     valueQuantity: z.object({

@@ -26,7 +26,10 @@ export const ONC_PROFILE_URLS = {
     painAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCPainAssessment',
     mustScore: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCMUSTScore',
     abbeyPainScale: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCAbbeyPainScale',
-    bristolStoolChart: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCBristolStoolChart'
+    bristolStoolChart: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCBristolStoolChart',
+    gcsScale: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCGlasgowComaScale',
+    frailtyScale: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCRockwoodFrailtyScale',
+    oralHealthAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCOralHealthAssessment'
 } as const;
 
 // =============================================================================
@@ -77,6 +80,30 @@ export const ABBEY_PAIN_CODES = {
 // =============================================================================
 export const BRISTOL_STOOL_CODES = {
     stoolType: '72106-8'             // Bristol stool form panel
+} as const;
+
+// =============================================================================
+// GCS Scale Codes
+// =============================================================================
+export const GCS_CODES = {
+    totalScore: '9269-2',            // Glasgow Coma Scale total score
+    eyes: '9267-6',                  // GCS Eyes
+    verbal: '9270-0',                // GCS Verbal
+    motor: '9268-4'                  // GCS Motor
+} as const;
+
+// =============================================================================
+// Clinical Frailty Scale Codes
+// =============================================================================
+export const FRAILTY_CODES = {
+    clinicalFrailtyScale: '91535-5'   // Clinical Frailty Scale (Rockwood)
+} as const;
+
+// =============================================================================
+// Oral Health Assessment Codes (ROAG)
+// =============================================================================
+export const ORAL_HEALTH_CODES = {
+    roagScore: 'ONC-ROAG-Score'      // Custom code for ROAG assessment
 } as const;
 
 // =============================================================================
@@ -465,6 +492,83 @@ export const bristolStoolChartSchema = z.object({
 });
 
 // =============================================================================
+// GCS Scale Schema (Observation with Components)
+// =============================================================================
+export const gcsScaleSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['final', 'amended', 'corrected']),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.literal(GCS_CODES.totalScore),
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().datetime(),
+    valueInteger: z.number().int().min(3).max(15), // GCS types 3-15
+    component: z.array(z.object({
+        code: codeableConceptSchema,
+        valueInteger: z.number().int().min(1)
+    })).optional()
+});
+
+// =============================================================================
+// Clinical Frailty Scale Schema (Observation)
+// =============================================================================
+export const frailtyScaleSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['final', 'amended', 'corrected']),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.literal('http://loinc.org'),
+            code: z.literal(FRAILTY_CODES.clinicalFrailtyScale),
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().datetime(),
+    valueInteger: z.number().int().min(1).max(9) // Rockwood Scale 1-9
+});
+
+// =============================================================================
+// Oral Health Assessment Schema (Observation)
+// =============================================================================
+export const oralHealthSchema = z.object({
+    resourceType: z.literal('Observation'),
+    id: z.string().optional(),
+    meta: z.object({
+        profile: z.array(z.string()).optional()
+    }).optional(),
+    status: z.enum(['final', 'amended', 'corrected']),
+    code: z.object({
+        coding: z.array(z.object({
+            system: z.string().optional(),
+            code: z.literal(ORAL_HEALTH_CODES.roagScore),
+            display: z.string().optional()
+        })).min(1),
+        text: z.string().optional()
+    }),
+    subject: referenceSchema,
+    effectiveDateTime: z.string().datetime(),
+    valueCodeableConcept: codeableConceptSchema.optional(),
+    component: z.array(z.object({
+        code: codeableConceptSchema,
+        valueCodeableConcept: codeableConceptSchema
+    })).optional()
+});
+
+// =============================================================================
 // Combined ONC Validation Schema
 // =============================================================================
 export const oncValidationPayloadSchema = z.union([
@@ -480,7 +584,10 @@ export const oncValidationPayloadSchema = z.union([
     painAssessmentSchema,
     mustScoreSchema,
     abbeyPainScaleSchema,
-    bristolStoolChartSchema
+    bristolStoolChartSchema,
+    gcsScaleSchema,
+    frailtyScaleSchema,
+    oralHealthSchema
 ]);
 
 // Type exports
@@ -497,3 +604,6 @@ export type PainAssessment = z.infer<typeof painAssessmentSchema>;
 export type MUSTScore = z.infer<typeof mustScoreSchema>;
 export type AbbeyPainScale = z.infer<typeof abbeyPainScaleSchema>;
 export type BristolStoolChart = z.infer<typeof bristolStoolChartSchema>;
+export type GCSScale = z.infer<typeof gcsScaleSchema>;
+export type FrailtyScale = z.infer<typeof frailtyScaleSchema>;
+export type OralHealthAssessment = z.infer<typeof oralHealthSchema>;

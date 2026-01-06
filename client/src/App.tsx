@@ -109,6 +109,40 @@ const TEMPLATES = {
         subject: { reference: "Patient/example" },
         effectiveDateTime: new Date().toISOString(),
         valueInteger: 4
+    },
+    GlasgowComaScale: {
+        resourceType: "Observation",
+        status: "final",
+        code: { coding: [{ system: "http://loinc.org", code: "9269-2", display: "Glasgow Coma Scale Total Score" }] },
+        subject: { reference: "Patient/example" },
+        effectiveDateTime: new Date().toISOString(),
+        valueInteger: 15,
+        component: [
+            { code: { coding: [{ system: "http://loinc.org", code: "9267-6", display: "GCS Eyes" }] }, valueInteger: 4 },
+            { code: { coding: [{ system: "http://loinc.org", code: "9270-0", display: "GCS Verbal" }] }, valueInteger: 5 },
+            { code: { coding: [{ system: "http://loinc.org", code: "9268-4", display: "GCS Motor" }] }, valueInteger: 6 }
+        ]
+    },
+    ClinicalFrailtyScale: {
+        resourceType: "Observation",
+        status: "final",
+        code: { coding: [{ system: "http://loinc.org", code: "91535-5", display: "Clinical Frailty Scale" }] },
+        subject: { reference: "Patient/example" },
+        effectiveDateTime: new Date().toISOString(),
+        valueInteger: 4
+    },
+    OralHealthAssessment: {
+        resourceType: "Observation",
+        status: "final",
+        code: { coding: [{ code: "ONC-ROAG-Score", display: "Oral Health Assessment (ROAG)" }] },
+        subject: { reference: "Patient/example" },
+        effectiveDateTime: new Date().toISOString(),
+        component: [
+            {
+                code: { coding: [{ code: "ROAG-lips", display: "Lips" }] },
+                valueCodeableConcept: { coding: [{ code: "status-healthy", display: "Healthy" }] }
+            }
+        ]
     }
 };
 

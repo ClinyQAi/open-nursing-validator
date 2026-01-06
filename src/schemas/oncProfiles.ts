@@ -8,6 +8,7 @@
  */
 
 import { z } from 'zod';
+import { ONC_TERMINOLOGY } from './oncTerminology';
 
 // =============================================================================
 // ONC-IG Profile URLs
@@ -32,79 +33,10 @@ export const ONC_PROFILE_URLS = {
     oralHealthAssessment: 'https://clinyqai.github.io/open-nursing-core-ig/StructureDefinition/ONCOralHealthAssessment'
 } as const;
 
-// =============================================================================
-// LOINC Codes for Braden Scale
-// =============================================================================
-export const BRADEN_SCALE_CODES = {
-    totalScore: '38222-1',           // Braden scale total score
-    sensoryPerception: '38229-6',    // Sensory perception
-    moisture: '38230-4',             // Moisture exposure
-    activity: '38231-2',             // Physical activity
-    mobility: '38232-0',             // Mobility
-    nutrition: '38233-8',            // Nutrition
-    frictionShear: '38234-6'         // Friction and shear
-} as const;
-
-// =============================================================================
-// NEWS2 Codes
-// =============================================================================
-export const NEWS2_CODES = {
-    totalScore: '88330-6',           // National Early Warning Score [NEWS]
-    snomedId: '1104051000000101'     // National Early Warning Score 2 (SNOMED-CT)
-} as const;
-
-// =============================================================================
-// Pain Assessment Codes (Numeric Rating Scale 0-10)
-// =============================================================================
-export const PAIN_ASSESSMENT_CODES = {
-    nrsScore: '72514-3',             // Pain severity - 0-10 verbal numeric rating
-    painSeverity: '38208-5'          // Pain severity - Reported (alternative)
-} as const;
-
-// =============================================================================
-// MUST Score Codes
-// =============================================================================
-export const MUST_SCORE_CODES = {
-    totalScore: '75303-8'            // Malnutrition Universal Screening Tool [MUST]
-} as const;
-
-// =============================================================================
-// Abbey Pain Scale Codes
-// =============================================================================
-export const ABBEY_PAIN_CODES = {
-    totalScore: '38213-0'            // Abbey pain scale total score
-} as const;
-
-// =============================================================================
-// Bristol Stool Chart Codes
-// =============================================================================
-export const BRISTOL_STOOL_CODES = {
-    stoolType: '72106-8'             // Bristol stool form panel
-} as const;
-
-// =============================================================================
-// GCS Scale Codes
-// =============================================================================
-export const GCS_CODES = {
-    totalScore: '9269-2',            // Glasgow Coma Scale total score
-    eyes: '9267-6',                  // GCS Eyes
-    verbal: '9270-0',                // GCS Verbal
-    motor: '9268-4'                  // GCS Motor
-} as const;
-
-// =============================================================================
-// Clinical Frailty Scale Codes
-// =============================================================================
-export const FRAILTY_CODES = {
-    clinicalFrailtyScale: '91535-5'   // Clinical Frailty Scale (Rockwood)
-} as const;
-
-// =============================================================================
-// Oral Health Assessment Codes (ROAG)
-// =============================================================================
-export const ORAL_HEALTH_CODES = {
-    roagScore: 'ONC-ROAG-Score'      // Custom code for ROAG assessment
-} as const;
+// Terminology extracted to oncTerminology.ts
+const LOINC = ONC_TERMINOLOGY.LOINC;
+const SNOMED = ONC_TERMINOLOGY.SNOMED;
+const CUSTOM = ONC_TERMINOLOGY.CUSTOM;
 
 // =============================================================================
 // Shared Schema Components
@@ -217,8 +149,8 @@ const baseProcedureSchema = z.object({
 export const bradenScaleObservationSchema = baseObservationSchema.extend({
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.literal(BRADEN_SCALE_CODES.totalScore),
+            system: z.literal(LOINC.BRADEN_TOTAL.system),
+            code: z.literal(LOINC.BRADEN_TOTAL.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -236,8 +168,8 @@ export const bradenScaleObservationSchema = baseObservationSchema.extend({
 export const skinToneObservationSchema = baseObservationSchema.extend({
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.literal('66472-2'), // Fitzpatrick skin type LOINC
+            system: z.literal(LOINC.FITZPATRICK.system),
+            code: z.literal(LOINC.FITZPATRICK.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -287,8 +219,8 @@ export const nursingInterventionSchema = baseProcedureSchema.extend({
 export const goalEvaluationSchema = baseObservationSchema.extend({
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://snomed.info/sct'),
-            code: z.literal('385633008'), // Finding related to progress toward goals
+            system: z.literal(SNOMED.FINDING_GOAL.system),
+            code: z.literal(SNOMED.FINDING_GOAL.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -330,8 +262,8 @@ export const oncNHSPatientSchema = z.object({
 export const news2ScoreSchema = baseObservationSchema.extend({
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.literal(NEWS2_CODES.totalScore),
+            system: z.literal(LOINC.NEWS2_TOTAL.system),
+            code: z.literal(LOINC.NEWS2_TOTAL.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -346,7 +278,7 @@ export const woundAssessmentSchema = baseObservationSchema.extend({
     status: z.enum(['final', 'amended', 'corrected']),
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://snomed.info/sct'),
+            system: z.literal(SNOMED.PRESSURE_ULCER.system),
             code: z.string(),
             display: z.string().optional()
         }))
@@ -354,15 +286,22 @@ export const woundAssessmentSchema = baseObservationSchema.extend({
     effectiveDateTime: z.string(),
     valueCodeableConcept: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://snomed.info/sct'),
-            code: z.enum(['421257003', '421985001', '420555000', '421720008', '421000124102', '103328001']),
+            system: z.literal(SNOMED.PRESSURE_ULCER.system),
+            code: z.enum([
+                SNOMED.STAGES.STAGE_1.code,
+                SNOMED.STAGES.STAGE_2.code,
+                SNOMED.STAGES.STAGE_3.code,
+                SNOMED.STAGES.STAGE_4.code,
+                SNOMED.STAGES.UNSTAGEABLE.code,
+                SNOMED.STAGES.DTI.code
+            ]),
             display: z.string().optional()
         }))
     }).optional(),
     component: z.array(z.object({
         code: z.object({
             coding: z.array(z.object({
-                system: z.literal('http://snomed.info/sct'),
+                system: z.literal(SNOMED.PRESSURE_ULCER.system),
                 code: z.string()
             }))
         }),
@@ -406,8 +345,8 @@ export const mustScoreSchema = baseObservationSchema.extend({
     status: z.enum(['final', 'amended', 'corrected']),
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.literal(MUST_SCORE_CODES.totalScore),
+            system: z.literal(LOINC.MUST_TOTAL.system),
+            code: z.literal(LOINC.MUST_TOTAL.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -423,8 +362,8 @@ export const abbeyPainScaleSchema = baseObservationSchema.extend({
     status: z.enum(['final', 'amended', 'corrected']),
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.literal(ABBEY_PAIN_CODES.totalScore),
+            system: z.literal(LOINC.ABBEY_TOTAL.system),
+            code: z.literal(LOINC.ABBEY_TOTAL.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -440,8 +379,8 @@ export const bristolStoolChartSchema = baseObservationSchema.extend({
     status: z.enum(['final', 'amended', 'corrected']),
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.literal(BRISTOL_STOOL_CODES.stoolType),
+            system: z.literal(LOINC.BRISTOL_STOOL.system),
+            code: z.literal(LOINC.BRISTOL_STOOL.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -457,8 +396,8 @@ export const gcsScaleSchema = baseObservationSchema.extend({
     status: z.enum(['final', 'amended', 'corrected']),
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.literal(GCS_CODES.totalScore),
+            system: z.literal(LOINC.GCS_TOTAL.system),
+            code: z.literal(LOINC.GCS_TOTAL.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -478,8 +417,8 @@ export const frailtyScaleSchema = baseObservationSchema.extend({
     status: z.enum(['final', 'amended', 'corrected']),
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.literal(FRAILTY_CODES.clinicalFrailtyScale),
+            system: z.literal(LOINC.FRAILTY_SCALE.system),
+            code: z.literal(LOINC.FRAILTY_SCALE.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
@@ -496,7 +435,7 @@ export const oralHealthSchema = baseObservationSchema.extend({
     code: z.object({
         coding: z.array(z.object({
             system: z.string().optional(),
-            code: z.literal(ORAL_HEALTH_CODES.roagScore),
+            code: z.literal(CUSTOM.ROAG_TOTAL.code),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()

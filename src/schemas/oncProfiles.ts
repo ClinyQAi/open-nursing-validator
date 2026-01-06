@@ -317,22 +317,16 @@ export const woundAssessmentSchema = baseObservationSchema.extend({
 // =============================================================================
 // Pain Assessment Schema (Numeric Rating Scale 0-10)
 // =============================================================================
-export const painAssessmentSchema = z.object({
-    resourceType: z.literal('Observation'),
-    id: z.string().optional(),
-    meta: z.object({
-        profile: z.array(z.string()).optional()
-    }).optional(),
+export const painAssessmentSchema = baseObservationSchema.extend({
     status: z.enum(['final', 'amended', 'corrected']),
     code: z.object({
         coding: z.array(z.object({
-            system: z.literal('http://loinc.org'),
-            code: z.enum(['72514-3', '38208-5']), // NRS or Pain Severity
+            system: z.literal(LOINC.PAIN_NRS.system),
+            code: z.enum([LOINC.PAIN_NRS.code, LOINC.PAIN_REPORTED.code]),
             display: z.string().optional()
         })).min(1),
         text: z.string().optional()
     }),
-    subject: referenceSchema,
     effectiveDateTime: z.string().datetime(),
     valueInteger: z.number().int().min(0).max(10), // NRS range 0-10
     bodySite: codeableConceptSchema.optional() // Optional pain location

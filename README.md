@@ -6,7 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-4.4+-blue.svg)](https://www.typescriptlang.org/)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-success)](https://github.com/ClinyQAi/nhs-unified-nursing-validator)
 
-The **Open Nursing Validator** is an intelligent, open-source validation engine tailored for the [Open Nursing Core Implementation Guide (ONC-IG)]([(https://opennursingcoreig.com/)]. 
+The **Open Nursing Validator** is an intelligent, open-source validation engine tailored for the [Open Nursing Core Implementation Guide (ONC-IG)] [(https://opennursingcoreig.com/)]. 
 
 Built by **Nursing Citizen Developers**, it bridges the gap between technical FHIR standards and clinical reality, ensuring that nursing data is both interoperable and clinically accurate.
 

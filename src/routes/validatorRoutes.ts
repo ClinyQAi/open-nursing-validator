@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import ValidatorController from '../controllers/validatorController';
+import { apiKeyAuth } from '../middleware/apiKeyAuth';
 
 const router = Router();
 const validatorController = new ValidatorController();
@@ -48,5 +49,5 @@ const validatorController = new ValidatorController();
  *                   type: object
  */
 export function setValidatorRoutes(app: Router) {
-    app.post('/validate-nursing-data', validatorController.validateNursingData.bind(validatorController));
+    app.post('/validate-nursing-data', apiKeyAuth, validatorController.validateNursingData.bind(validatorController));
 }

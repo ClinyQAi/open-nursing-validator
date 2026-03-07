@@ -4,6 +4,7 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { setValidatorRoutes } from './routes/validatorRoutes';
 import { errorHandler } from './middleware/errorHandler';
+import { apiKeyAuth } from './middleware/apiKeyAuth';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
@@ -79,8 +80,10 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Swagger UI – disabled in production; protected by API key in other environments
+if (process.env.NODE_ENV !== 'production') {
+    app.use('/api-docs', apiKeyAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
 
 // Set up routes
 setValidatorRoutes(app);

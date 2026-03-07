@@ -1,4 +1,7 @@
 import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import { setValidatorRoutes } from './routes/validatorRoutes';
 import { errorHandler } from './middleware/errorHandler';
 import path from 'path';
@@ -7,8 +10,30 @@ import { swaggerSpec } from './config/swagger';
 
 const app = express();
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+// Security headers
+app.use(helmet());
+
+// CORS – allow same-origin only by default; override with ALLOWED_ORIGINS env var
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+    : [];
+app.use(cors({
+    origin: allowedOrigins.length > 0 ? allowedOrigins : false,
+    methods: ['GET', 'POST'],
+}));
+
+// Rate limiting – 100 requests per 15-minute window per IP
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' },
+});
+app.use(limiter);
+
+// Middleware to parse JSON bodies – 1 MB limit to prevent DoS via large payloads
+app.use(express.json({ limit: '1mb' }));
 
 // Root endpoint - API information
 // Serve static files from the React app

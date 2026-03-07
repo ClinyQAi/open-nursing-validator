@@ -37,5 +37,9 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
 
+# Run as non-root user to limit blast radius of a container escape
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
 # Start the server
 CMD ["node", "dist/server.js"]

@@ -187,7 +187,7 @@ function App() {
                     <p style={{ color: '#768692', fontSize: '1.1rem' }}>Spec-driven FHIR validation for clinical documentation.</p>
                 </div>
                 <div style={{ display: 'flex', gap: '15px' }}>
-                    <a href="https://github.com/ClinyQAi/nhs-unified-nursing-validator" target="_blank" style={{ color: '#212B32' }}>
+                    <a href="https://github.com/ClinyQAi/nhs-unified-nursing-validator" target="_blank" rel="noopener noreferrer" style={{ color: '#212B32' }}>
                         <Github size={24} />
                     </a>
                 </div>

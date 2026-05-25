@@ -34,7 +34,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "eslint": "^7.32.0",
-    "jest": "^27.0.6",
+    "jest": "^30.4.2",
     "prettier": "^2.5.1",
     "ts-jest": "^27.0.6",
     "ts-node": "^10.4.0",

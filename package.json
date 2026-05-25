@@ -53,5 +53,11 @@
     "type": "git",
     "url": "https://github.com/ClinyQAi/nhs-unified-nursing-validator.git"
   },
-  "homepage": "https://clinyqai.github.io/open-nursing-core-ig/"
+  "homepage": "https://clinyqai.github.io/open-nursing-core-ig/",
+  "overrides": {
+    "rollup": ">=4.59.0",
+    "postcss": ">=8.5.10",
+    "vite": ">=7.3.2",
+    "picomatch": ">=4.0.4"
+  }
 }

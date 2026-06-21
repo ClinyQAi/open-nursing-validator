@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import ValidatorController from '../controllers/validatorController';
+import NhsEdiController from '../controllers/nhsEdiController';
 
 const router = Router();
 const validatorController = new ValidatorController();
+const nhsEdiController = new NhsEdiController();
 
 /**
  * @openapi
@@ -49,4 +51,30 @@ const validatorController = new ValidatorController();
  */
 export function setValidatorRoutes(app: Router) {
     app.post('/validate-nursing-data', validatorController.validateNursingData.bind(validatorController));
+
+    /**
+     * @openapi
+     * /validate-nhs-edi:
+     *   post:
+     *     summary: Validate an NHS EDI Complexity Report
+     *     description: >
+     *       Validates an NHS Equality, Diversity & Inclusion workforce report
+     *       against the Complexity Sciences framework derived from Castellani &
+     *       Gerrits' Map of the Complexity Sciences (Durham Repository,
+     *       output/1638759). Covers WRES, WDES, the six NHS EDI High Impact
+     *       Actions, and five complexity-science lineage indicators.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             description: NHSEdiComplexityReport JSON object
+     *     responses:
+     *       200:
+     *         description: Report is valid
+     *       400:
+     *         description: Validation failed
+     */
+    app.post('/validate-nhs-edi', nhsEdiController.validateEdiReport.bind(nhsEdiController));
 }
